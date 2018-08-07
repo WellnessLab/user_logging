@@ -1,7 +1,5 @@
 package edu.neu.ccs.wellness.logging;
 
-import java.util.ArrayList;
-
 /**
  * Created by RAJ on 7/28/2018.
  */

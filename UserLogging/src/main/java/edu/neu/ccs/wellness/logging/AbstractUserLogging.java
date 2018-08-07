@@ -1,12 +1,13 @@
 package edu.neu.ccs.wellness.logging;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 /**
  * Created by hermansaksono on 7/11/18.
  */
 
-abstract class AbstractUserTracking {
+abstract class AbstractUserLogging {
 
     private String uid;
 
@@ -15,7 +16,7 @@ abstract class AbstractUserTracking {
      *
      * @param uid Anonymized user id. Must not contain any personally identifiable information.
      */
-    AbstractUserTracking(String uid) {
+    AbstractUserLogging(String uid) {
         this.uid = uid;
     }
 
@@ -37,5 +38,5 @@ abstract class AbstractUserTracking {
      *                        and must start with an alphabetic character and contain only
      *                        alphanumeric characters and underscores.
      */
-    public abstract void logEvent(String eventName, Bundle eventParameters);
+    public abstract void logEvent(String eventName, @Nullable Bundle eventParameters);
 }

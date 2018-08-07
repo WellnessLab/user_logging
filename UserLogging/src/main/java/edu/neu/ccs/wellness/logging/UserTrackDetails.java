@@ -1,7 +1,12 @@
 package edu.neu.ccs.wellness.logging;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
+import com.google.firebase.database.Exclude;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,13 +20,20 @@ public class UserTrackDetails implements UserTrackingInfoInterface {
     private String eventName;
     private String date;
     private String timestamp;
-    private Map<String, Object> eventParameters;
+    private Map<String, Object> eventParams;
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
 
-    public UserTrackDetails(String eventName, Bundle eventParameters){
-            this.eventName = eventName;
-            this.eventParameters = getEventParamsMapFromBundle(eventParameters);
-            this.date = new Date().toString();
-            this.timestamp = String.valueOf(new Date().getTime());
+    public UserTrackDetails(String eventName, @Nullable Bundle eventParameters){
+        Date date = new Date();
+        this.eventName = eventName;
+        this.date = date.toString();
+        this.timestamp = String.valueOf(date.getTime());
+
+        if (eventParameters == null) {
+            this.eventParams = null;
+        } else {
+            this.eventParams = getEventParamsMapFromBundle(eventParameters);
+        }
     }
 
     @Override
@@ -34,9 +46,13 @@ public class UserTrackDetails implements UserTrackingInfoInterface {
         return date;
     }
 
-    @Override
+    @Override @Exclude
     public Bundle getEventParameters() {
-        return getBundleFromParamsMap(eventParameters);
+        if (eventParams == null) {
+            return new Bundle();
+        } else {
+            return getBundleFromParamsMap(eventParams);
+        }
     }
 
     @Override
@@ -44,7 +60,15 @@ public class UserTrackDetails implements UserTrackingInfoInterface {
         return timestamp;
     }
 
-    public Map<String, Object> getEventParametersMap() { return eventParameters;}
+    public Map<String, Object> getEventParams() { return eventParams;}
+
+    @Exclude
+    public String getDateString() {
+        Timestamp stamp = new Timestamp(Long.parseLong(this.timestamp));
+        Date date = new Date(stamp.getTime());
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        return sdf.format(date);
+    }
 
     /* HELPER METHODS */
     private static Map<String, Object> getEventParamsMapFromBundle(Bundle eventParametersBundle) {

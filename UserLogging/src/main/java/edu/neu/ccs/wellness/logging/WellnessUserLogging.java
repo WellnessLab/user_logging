@@ -1,6 +1,7 @@
 package edu.neu.ccs.wellness.logging;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -9,7 +10,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Created by hermansaksono on 7/11/18.
  */
 
-public class WellnessUserTracking extends AbstractUserTracking {
+public class WellnessUserLogging extends AbstractUserLogging {
 
     private static final String FIREBASE_USER_TRACKING_ROOT = "user_logging";
     private DatabaseReference databaseReference;
@@ -20,7 +21,7 @@ public class WellnessUserTracking extends AbstractUserTracking {
      *
      * @param uid Anonymized user id. Must not contain any personally identifiable information.
      */
-    public WellnessUserTracking(String uid) {
+    public WellnessUserLogging(String uid) {
         super(uid);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         userTrackingRoot = databaseReference.child(FIREBASE_USER_TRACKING_ROOT);
@@ -32,11 +33,12 @@ public class WellnessUserTracking extends AbstractUserTracking {
      * Calling logEvent("USER_REFLECTION") will add the following entry to Firebase:
      * + user_logging
      * +---717
-     * +-----1531281600000
-     * +-------"eventName": "USER_REFLECTION"
-     * +-------"date": "2018-07-11 4:00:00 AM"
-     * +-------"timestamp": "1531281600000"
-     * +-------"eventParameters": {}
+     * +-----2018-07-11
+     * +-------1531281600000
+     * +---------"eventName": "USER_REFLECTION"
+     * +---------"date": "2018-07-11 4:00:00 AM"
+     * +---------"timestamp": "1531281600000"
+     * +---------"eventParameters": {}
      *
      *
      * @param eventName The name of the event. Should contain 1 to 40 alphanumeric characters or
@@ -47,25 +49,12 @@ public class WellnessUserTracking extends AbstractUserTracking {
      *                        alphanumeric characters and underscores.
      */
     @Override
-    public void logEvent(String eventName, Bundle eventParameters) {
-        String uid = this.getUid();
-        //String randomKey = getRandomString();
-
-        /*
-        ArrayList<String> params = new ArrayList<>();
-        for(String x : eventParameters.keySet()){
-            params.add(x+": "+eventParameters.get(x).toString());
-        }
-
-        Bundle newBundle = new Bundle();
-        newBundle.putString("Parameters", params.toString());
-        */
-
-        //userTrackDetails = new UserTrackDetails(eventName, newBundle);
+    public void logEvent(String eventName, @Nullable Bundle eventParameters) {
         UserTrackDetails userTrackDetails = new UserTrackDetails(eventName, eventParameters);
 
         userTrackingRoot
-                .child(uid)
+                .child(this.getUid())
+                .child(userTrackDetails.getDateString())
                 .child(userTrackDetails.getTimestamp())
                 .setValue(userTrackDetails);
     }
