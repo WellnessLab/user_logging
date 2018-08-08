@@ -1,7 +1,8 @@
 package edu.neu.ccs.wellness.logging;
 
 /**
- * Created by hermansaksono on 7/26/18.
+ * Created by Herman Saksono on 7/26/18.
+ * Inspired by Raj Kukadia's prior work.
  */
 
 public class Event {

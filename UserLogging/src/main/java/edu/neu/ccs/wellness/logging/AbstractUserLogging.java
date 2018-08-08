@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 /**
- * Created by hermansaksono on 7/11/18.
+ * Created by Herman Saksono on 7/11/18.
  */
 
 abstract class AbstractUserLogging {

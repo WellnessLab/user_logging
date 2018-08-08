@@ -7,24 +7,41 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 /**
- * Created by hermansaksono on 7/11/18.
+ * Initiated by Herman Saksono on 7/11/18.
+ * Developed by Raj Kukadia on 7/15/2018.
  */
 
 public class WellnessUserLogging extends AbstractUserLogging {
 
     private static final String FIREBASE_USER_TRACKING_ROOT = "user_logging";
+    private String path;
     private DatabaseReference databaseReference;
     private DatabaseReference userTrackingRoot;
 
     /**
-     * Constructor.
+     * Constructor. This will use the default Firebase path as defined in
+     * {@link #FIREBASE_USER_TRACKING_ROOT}.
      *
      * @param uid Anonymized user id. Must not contain any personally identifiable information.
      */
     public WellnessUserLogging(String uid) {
         super(uid);
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        userTrackingRoot = databaseReference.child(FIREBASE_USER_TRACKING_ROOT);
+        this.path = FIREBASE_USER_TRACKING_ROOT;
+        this.databaseReference = FirebaseDatabase.getInstance().getReference();
+        this.userTrackingRoot = databaseReference.child(this.path);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param uid Anonymized user id. Must not contain any personally identifiable information.
+     * @param path The path for the Firebase database.
+     */
+    public WellnessUserLogging(String uid, String path) {
+        super(uid);
+        this.path = path;
+        this.databaseReference = FirebaseDatabase.getInstance().getReference();
+        this.userTrackingRoot = databaseReference.child(this.path);
     }
 
     /**
@@ -58,4 +75,10 @@ public class WellnessUserLogging extends AbstractUserLogging {
                 .child(userTrackDetails.getTimestamp())
                 .setValue(userTrackDetails);
     }
+
+    /**
+     * Gets the Firebase path
+     * @return A String that defines the Firebase path.
+     */
+    public String getPath() { return this.path; }
 }
